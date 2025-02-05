@@ -1,20 +1,29 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Expose } from "class-transformer";
+import { ApiProperty } from '@nestjs/swagger';
+import { User, UserRole } from '../entities/user.entity';
 
 export class ResponseUserDto {
-  @Expose()
-  @ApiProperty({ example: '550e8400-e29b-41d4-a716-446655440000' })
+  @ApiProperty({
+    example: '550e8400-e29b-41d4-a716-446655440000',
+    description: 'ID do usuário criado'
+  })
   id: string;
 
-  @Expose()
-  @ApiProperty({ example: 'João Silva' })
-  name: string;
-
-  @Expose()
-  @ApiProperty({ example: 'joao@email.com' })
+  @ApiProperty({
+    example: 'joao@email.com',
+    description: 'Email do usuário'
+  })
   email: string;
 
-  constructor(partial: Partial<ResponseUserDto>) {
-    Object.assign(this, partial);
+  @ApiProperty({
+    enum: UserRole,
+    example: UserRole.CLIENT,
+    description: 'Tipo de usuário'
+  })
+  role: UserRole;
+
+  constructor(user: User) {
+    this.id = user.id;
+    this.email = user.email;
+    this.role = user.role;
   }
 }

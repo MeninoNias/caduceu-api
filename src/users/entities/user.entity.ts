@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
+
 export enum UserRole {
   ADMIN = 'admin',
   CLIENT = 'client',
