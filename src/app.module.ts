@@ -16,6 +16,6 @@ import { UsersModule } from './users/users.module';
     UsersModule
   ],
   controllers: [],
-  providers: [],
+  providers: [DataBaseConfigService],
 })
 export class AppModule { }
