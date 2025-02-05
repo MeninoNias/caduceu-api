@@ -30,8 +30,8 @@ export class UsersService {
     });
 
     const savedUser = await this.userRepository.save(newUser);
-    return savedUser
 
+    return savedUser
   }
 
   async findAll(): Promise<User[]> {

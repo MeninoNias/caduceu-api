@@ -29,7 +29,7 @@ export class UsersController {
     status: 200,
     type: [ResponseUserDto]
   })
-  findAll() {
+  findAll(): Promise<ResponseUserDto[]> {
     return this.usersService.findAll();
   }
 
