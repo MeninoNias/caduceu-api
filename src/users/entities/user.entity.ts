@@ -1,5 +1,4 @@
 import { Exclude } from 'class-transformer';
-import { Client } from 'src/clients/entities/client.entity';
 import {
   Column,
   CreateDateColumn,
@@ -8,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
+import { Client } from '../../clients/entities/client.entity';
 
 export enum UserRole {
   ADMIN = 'admin',
