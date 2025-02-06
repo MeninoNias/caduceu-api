@@ -1,8 +1,10 @@
 import { Exclude } from 'class-transformer';
+import { Client } from 'src/clients/entities/client.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
@@ -29,6 +31,9 @@ export class User {
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.CLIENT })
   role: UserRole;
+
+  @OneToOne(() => Client, client => client.user)
+  client: Client;
 
   @CreateDateColumn()
   createdAt: Date;
