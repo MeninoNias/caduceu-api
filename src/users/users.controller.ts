@@ -1,5 +1,6 @@
 import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { HashedPasswordPipe } from 'src/shared/pipes/hashed-password.pipe';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ResponseUserDto } from './dto/response-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -18,8 +19,11 @@ export class UsersController {
     description: 'Usuário criado com sucesso',
     type: ResponseUserDto
   })
-  async create(@Body() createUserDto: CreateUserDto): Promise<ResponseUserDto> {
-    const user = await this.usersService.create(createUserDto);
+  async create(
+    @Body() createUserDto: CreateUserDto,
+    @Body('password', HashedPasswordPipe) password: string
+  ): Promise<ResponseUserDto> {
+    const user = await this.usersService.create({ ...createUserDto, password });
     return new ResponseUserDto(user);
   }
 

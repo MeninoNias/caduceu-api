@@ -22,13 +22,7 @@ export class UsersService {
       throw new ConflictException('Email já está em uso');
     }
 
-    // const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-
-    const newUser = this.userRepository.create({
-      ...createUserDto,
-      // passwordHash: ,
-    });
-
+    const newUser = this.userRepository.create(createUserDto);
     const savedUser = await this.userRepository.save(newUser);
 
     return savedUser
