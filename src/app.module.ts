@@ -7,6 +7,7 @@ import { AuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
 import { DataBaseConfigService } from './config/db.config.service';
 import { UsersModule } from './users/users.module';
+import { ClientsModule } from './clients/clients.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UsersModule } from './users/users.module';
     }),
     AuthModule,
     UsersModule,
+    ClientsModule,
   ],
   controllers: [],
   providers: [
