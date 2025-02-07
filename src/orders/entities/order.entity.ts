@@ -11,10 +11,12 @@ import { Client } from '../../clients/entities/client.entity';
 import { OrderItem } from './order-item.entity';
 
 export enum OrderStatus {
-  RECEIVED = 'RECEIVED',
-  PROCESSING = 'PROCESSING',
-  COMPLETED = 'COMPLETED',
-  CANCELLED = 'CANCELLED'
+  RECEIVED = 'RECEIVED',          // Pedido recebido
+  PROCESSING = 'PROCESSING',      // Em preparação
+  READY = 'READY',                // Pronto para despacho
+  DISPATCHED = 'DISPATCHED',      // Despachado
+  DELIVERED = 'DELIVERED',        // Entregue
+  CANCELLED = 'CANCELLED'         // Cancelado
 }
 
 @Entity('orders')
