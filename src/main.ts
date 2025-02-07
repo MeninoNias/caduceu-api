@@ -20,6 +20,7 @@ async function bootstrap() {
     .addTag('🔐 Auth', 'Autenticação e autorização')
     .addTag('👤 Users', 'Operações com usuários')
     .addTag('🙆‍♂️ Clients', 'Gestão de clientes')
+    .addTag('📦 Product', 'Gestão de produtos')
     .addBearerAuth()
     .build();
 
