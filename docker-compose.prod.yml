@@ -26,7 +26,7 @@ services:
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
-      - VIRTUAL_HOST=your_domain
-      - LETSENCRYPT_HOST=your_domain
+      - VIRTUAL_HOST=localhost
+      - LETSENCRYPT_HOST=localhost
     depends_on:
       - postgres
