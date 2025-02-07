@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
   Between,
@@ -12,6 +16,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { FindProductsDto } from './dto/find-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
+import { StockProductDto } from './entities/stock-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -72,5 +77,18 @@ export class ProductService {
     const product = await this.findOne(id);
 
     await this.productRepository.remove(product);
+  }
+
+  async updateStock(id: string, stockProductSchema: StockProductDto): Promise<Product> {
+    const product = await this.findOne(id);
+    const { quantity } = stockProductSchema;
+
+    if (product.stockQuantity < quantity) {
+      throw new BadRequestException('Quantidade indisponível em estoque');
+    }
+
+    product.stockQuantity -= quantity;
+
+    return this.productRepository.save(product);
   }
 }

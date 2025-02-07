@@ -6,7 +6,13 @@ import {
   Param, Patch, Post,
   Query
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags
+} from '@nestjs/swagger';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { YupValidationPipe } from '../shared/pipes/yup-validation.pipe';
 import { UserRole } from '../users/entities/user.entity';
@@ -15,7 +21,9 @@ import { FindProductsDto } from './dto/find-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductService } from './product.service';
 import { createProductSchema } from './schemas/create-product.schema';
+import { stockProductSchema } from './schemas/stock-product.schema';
 import { updateProductSchema } from './schemas/update-product.schema';
+import { StockProductDto } from './entities/stock-product.dto';
 
 @ApiTags('📦 Product')
 @ApiBearerAuth()
@@ -101,5 +109,19 @@ export class ProductController {
   })
   remove(@Param('id') id: string) {
     return this.productService.remove(id);
+  }
+
+  @Patch(':id/stock')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Atualizar estoque do produto' })
+  @ApiResponse({
+    status: 200,
+    description: 'Estoque atualizado com sucesso'
+  })
+  updateStock(
+    @Param('id') id: string,
+    @Body(new YupValidationPipe(stockProductSchema)) stockProductSchema: StockProductDto
+  ) {
+    return this.productService.updateStock(id, stockProductSchema);
   }
 }
