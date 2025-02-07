@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e
 
-echo "Waiting for postgres..."
-until nc -z postgres 5432; do
-    sleep 1
+echo "Waiting for PostgreSQL..."
+until pg_isready -h "$DB_HOST" -U "$DB_USERNAME"; do
+  sleep 2
 done
-echo "PostgreSQL started"
+echo "PostgreSQL is up and running!"
 
 echo "Running migrations..."
 npm run migration:run
