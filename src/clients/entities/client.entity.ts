@@ -1,5 +1,15 @@
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from "typeorm";
+import { Order } from '../../orders/entities/order.entity';
 import { User } from '../../users/entities/user.entity';
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Client {
@@ -21,6 +31,9 @@ export class Client {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @OneToMany(() => Order, (order) => order.client)
+  orders: Order[];
 
   @CreateDateColumn()
   createdAt: Date;
