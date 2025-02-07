@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -49,5 +49,12 @@ export class UsersService {
 
   async findByEmail(email: string): Promise<User | null> {
     return this.userRepository.findOne({ where: { email } });
+  }
+  
+  async confirm(token: string) {
+    const user = await this.userRepository.findOne({ where: { id: token } });
+    if (!user) throw new BadRequestException('Token inválido');
+    await this.userRepository.update(user.id, { emailConfirm: true });;
+    return await this.userRepository.findOne({ where: { id: token } });
   }
 }
