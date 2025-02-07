@@ -13,7 +13,7 @@ FROM node:20-slim
 WORKDIR /app
 
 RUN apt-get update && \
-    apt-get install -y netcat-openbsd && \
+    apt-get install -y netcat-openbsd postgresql-client && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/dist /app/dist
