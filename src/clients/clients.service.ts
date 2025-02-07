@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { CreateClientDto } from './dto/create-client.dto';
+import { FindClientsDto } from './dto/find-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { Client } from './entities/client.entity';
 
@@ -44,12 +45,36 @@ export class ClientsService {
 
   }
 
-  async findAll(): Promise<Client[]> {
-    return await this.clientRepository.find()
+  async findAll(query: FindClientsDto): Promise<Client[]> {
+    const qb = this.clientRepository
+      .createQueryBuilder('client')
+      .leftJoinAndSelect('client.user', 'user');
+
+    if (query.search) {
+      qb.where('LOWER(client.fullName) LIKE LOWER(:search)', {
+        search: `%${query.search}%`
+      })
+        .orWhere('LOWER(user.email) LIKE LOWER(:search)', {
+          search: `%${query.search}%`
+        });
+    }
+
+    if (query.isActive !== undefined) {
+      qb.andWhere('client.isActive = :isActive', {
+        isActive: query.isActive
+      });
+    }
+
+    return qb.getMany();
   }
 
   async findOne(id: string): Promise<Client> {
-    const client = await this.clientRepository.findOneBy({ id });
+    const client = await this.clientRepository.findOne(
+      {
+        where: { id },
+        relations: ['user']
+      }
+    );
     if (!client) throw new NotFoundException('Cliente não encontrado');
     return client;
   }
