@@ -3,9 +3,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
+import { Client } from '../../clients/entities/client.entity';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -23,12 +25,18 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @Column({ default: false })
+  emailConfirm: boolean;
+
   @Column()
   @Exclude()
   password: string;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.CLIENT })
   role: UserRole;
+
+  @OneToOne(() => Client, client => client.user)
+  client: Client;
 
   @CreateDateColumn()
   createdAt: Date;
