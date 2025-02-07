@@ -8,8 +8,7 @@ import {
   Patch,
   Post,
   Query,
-  UseInterceptors,
-  UsePipes
+  UseInterceptors
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -44,9 +43,8 @@ export class ClientsController {
     status: 201,
     type: [ResponseClientDto]
   })
-  @UsePipes(new YupValidationPipe(createClientSchema))
   create(
-    @Body() createClientDto: CreateClientDto,
+    @Body(new YupValidationPipe(createClientSchema)) createClientDto: CreateClientDto,
     @Body('password', HashedPasswordPipe) password: string
   ) {
     return this.clientsService.create({ ...createClientDto, password });
