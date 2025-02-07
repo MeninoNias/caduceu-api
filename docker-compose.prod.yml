@@ -19,14 +19,13 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
+    env_file:
+      - .env
     environment:
-      - NODE_ENV=production
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - VIRTUAL_HOST=localhost
-      - LETSENCRYPT_HOST=localhost
+      NODE_ENV: production
+      DB_HOST: postgres
     depends_on:
       - postgres
+    volumes:
+      - .env:/app/.env
+    command: ["./docker-entrypoint.sh"]
