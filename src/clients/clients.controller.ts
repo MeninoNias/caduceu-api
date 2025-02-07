@@ -8,7 +8,8 @@ import {
   Patch,
   Post,
   Query,
-  UseInterceptors
+  UseInterceptors,
+  UsePipes
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -19,6 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { HashedPasswordPipe } from 'src/shared/pipes/hashed-password.pipe';
+import { YupValidationPipe } from 'src/shared/pipes/yup-validation.pipe';
 import { UserRole } from 'src/users/entities/user.entity';
 import { Public } from '../auth/decorators/is-public.decorator';
 import { ClientsService } from './clients.service';
@@ -26,6 +28,7 @@ import { CreateClientDto } from './dto/create-client.dto';
 import { FindClientsDto } from './dto/find-client.dto';
 import { ResponseClientDto } from './dto/response-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
+import { createClientSchema } from './schemas/create-client.schema';
 
 @ApiTags('🙆‍♂️ Clients')
 @ApiBearerAuth()
@@ -36,6 +39,12 @@ export class ClientsController {
   constructor(private readonly clientsService: ClientsService) { }
 
   @Post()
+  @ApiOperation({ summary: 'Cria os clientes' })
+  @ApiResponse({
+    status: 201,
+    type: [ResponseClientDto]
+  })
+  @UsePipes(new YupValidationPipe(createClientSchema))
   create(
     @Body() createClientDto: CreateClientDto,
     @Body('password', HashedPasswordPipe) password: string
