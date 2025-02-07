@@ -9,6 +9,7 @@ import { ClientsModule } from './clients/clients.module';
 import { DataBaseConfigService } from './config/db.config.service';
 import { MailSenderModule } from './mail-sender/mail-sender.module';
 import { UsersModule } from './users/users.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { UsersModule } from './users/users.module';
     UsersModule,
     ClientsModule,
     MailSenderModule,
+    ProductModule,
   ],
   controllers: [],
   providers: [
