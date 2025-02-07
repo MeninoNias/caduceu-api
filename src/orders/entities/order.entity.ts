@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
 import { Client } from '../../clients/entities/client.entity';
+import { OrderItem } from './order-item.entity';
 
 export enum OrderStatus {
   RECEIVED = 'RECEIVED',
@@ -35,6 +37,9 @@ export class Order {
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   total: number;
+
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
+  items: OrderItem[]
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
