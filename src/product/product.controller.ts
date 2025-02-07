@@ -3,13 +3,15 @@ import {
   Controller,
   Delete,
   Get,
-  Param, Patch, Post
+  Param, Patch, Post,
+  Query
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { YupValidationPipe } from '../shared/pipes/yup-validation.pipe';
 import { UserRole } from '../users/entities/user.entity';
 import { CreateProductDto } from './dto/create-product.dto';
+import { FindProductsDto } from './dto/find-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductService } from './product.service';
 import { createProductSchema } from './schemas/create-product.schema';
@@ -40,8 +42,32 @@ export class ProductController {
     status: 200,
     description: 'Lista de produtos retornada com sucesso'
   })
-  findAll() {
-    return this.productService.findAll();
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description: 'Busca por nome do produto'
+  })
+  @ApiQuery({
+    name: 'minPrice',
+    required: false,
+    type: Number,
+    description: 'Preço mínimo'
+  })
+  @ApiQuery({
+    name: 'maxPrice',
+    required: false,
+    type: Number,
+    description: 'Preço máximo'
+  })
+  @ApiQuery({
+    name: 'inStock',
+    required: false,
+    type: Boolean,
+    description: 'Filtrar apenas produtos em estoque'
+  })
+  findAll(@Query() filters: FindProductsDto) {
+    return this.productService.findAll(filters);
   }
 
   @Get(':id')

@@ -1,7 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import {
+  Between,
+  FindOptionsWhere,
+  ILike,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+  Repository
+} from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
+import { FindProductsDto } from './dto/find-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 
@@ -17,8 +25,27 @@ export class ProductService {
     return await this.productRepository.save(product);
   }
 
-  async findAll() {
-    return await this.productRepository.find();
+  async findAll(filters: FindProductsDto) {
+    const where: FindOptionsWhere<Product> = {};
+
+    if (filters.search) {
+      where.name = ILike(`%${filters.search}%`);
+    }
+
+    if (filters.minPrice && filters.maxPrice) {
+      where.price = Between(filters.minPrice, filters.maxPrice);
+    } else if (filters.minPrice) {
+      where.price = MoreThanOrEqual(filters.minPrice);
+    } else if (filters.maxPrice) {
+      where.price = LessThanOrEqual(filters.maxPrice);
+    }
+
+    if (filters.inStock !== undefined) {
+      where.stockQuantity = filters.inStock
+        ? MoreThanOrEqual(1)
+        : 0;
+    }
+    return await this.productRepository.find({ where });
   }
 
   async findOne(id: string) {
