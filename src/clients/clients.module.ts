@@ -5,11 +5,13 @@ import { UsersModule } from '../users/users.module';
 import { ClientsController } from './clients.controller';
 import { ClientsService } from './clients.service';
 import { Client } from './entities/client.entity';
+import { MailSenderModule } from 'src/mail-sender/mail-sender.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Client, User]),
-    UsersModule
+    UsersModule,
+    MailSenderModule
   ],
   controllers: [ClientsController],
   providers: [ClientsService],

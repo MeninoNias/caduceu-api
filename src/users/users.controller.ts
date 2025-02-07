@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseInterceptors
 } from '@nestjs/common';
 import {
@@ -17,6 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { HashedPasswordPipe } from 'src/shared/pipes/hashed-password.pipe';
+import { Public } from '../auth/decorators/is-public.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ResponseUserDto } from './dto/response-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -31,7 +33,6 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
   @Post()
-  @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Criar novo usuário' })
   @ApiResponse({
     status: 201,
@@ -85,5 +86,12 @@ export class UsersController {
   })
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
+  }
+
+  @Get('confirm/:token')
+  @Public()
+  @ApiOperation({ summary: 'Confirmar Usuario' })
+  async confirm(@Param('token') id: string, @Query('token') token: string) {
+    return this.usersService.confirm(token);
   }
 }

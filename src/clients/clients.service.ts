@@ -1,6 +1,7 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
+import { MailService } from '../mail-sender/mail-sender.service';
 import { User } from '../users/entities/user.entity';
 import { CreateClientDto } from './dto/create-client.dto';
 import { FindClientsDto } from './dto/find-client.dto';
@@ -14,7 +15,8 @@ export class ClientsService {
     private clientRepository: Repository<Client>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private dataSource: DataSource
+    private dataSource: DataSource,
+    private mailService: MailService,
   ) { }
 
 
@@ -39,6 +41,8 @@ export class ClientsService {
         ...clientData,
         user
       });
+
+      await this.mailService.sendVerifyEmailMail(clientData.fullName, email, user.id);
 
       return client;
     });
@@ -91,4 +95,5 @@ export class ClientsService {
     if (!client) throw new NotFoundException('Cliente não encontrado');
     return await this.clientRepository.delete(id);
   }
+
 }

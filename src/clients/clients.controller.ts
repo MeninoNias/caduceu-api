@@ -20,6 +20,7 @@ import {
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { HashedPasswordPipe } from 'src/shared/pipes/hashed-password.pipe';
 import { UserRole } from 'src/users/entities/user.entity';
+import { Public } from '../auth/decorators/is-public.decorator';
 import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { FindClientsDto } from './dto/find-client.dto';
@@ -43,6 +44,7 @@ export class ClientsController {
   }
 
   @Get()
+  @Public()
   @ApiOperation({ summary: 'Listar todos clientes' })
   @ApiResponse({
     status: 200,
@@ -91,4 +93,5 @@ export class ClientsController {
   remove(@Param('id') id: string) {
     return this.clientsService.remove(id);
   }
+
 }
