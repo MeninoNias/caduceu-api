@@ -3,32 +3,27 @@ FROM node:20-slim AS builder
 WORKDIR /app
 
 COPY package*.json ./
+
 RUN npm ci
 
 COPY . .
-COPY .env ./
-
 RUN npm run build
-RUN ls -la dist/
 
 FROM node:20-slim
 
 WORKDIR /app
 
 RUN apt-get update && \
-    apt-get install -y netcat-openbsd && \
+    apt-get install -y netcat-openbsd postgresql-client && \
     rm -rf /var/lib/apt/lists/*
 
-# Copiar apenas o necessário
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/.env ./
-COPY docker-entrypoint.sh ./
+COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/package*.json /app/
+COPY --from=builder /app/docker-entrypoint.sh /app/
 
-RUN npm ci --only=production && \
-    chmod +x docker-entrypoint.sh && \
-    sed -i 's/\r$//g' docker-entrypoint.sh
+RUN npm ci --only=production --omit=dev && \
+    chmod +x /app/docker-entrypoint.sh
 
 EXPOSE 3000
 
-ENTRYPOINT ["/bin/bash", "docker-entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/app/docker-entrypoint.sh"]

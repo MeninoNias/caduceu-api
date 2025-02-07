@@ -27,5 +27,8 @@ services:
     depends_on:
       - postgres
     volumes:
-      - .env:/app/.env
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - /app/node_modules
+      - ./.env:/app/.env
     command: ["./docker-entrypoint.sh"]
