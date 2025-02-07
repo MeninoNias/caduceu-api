@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Controller, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
+import { Client } from '../clients/entities/client.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { StatusOrderDto } from './dto/status-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
@@ -11,12 +12,27 @@ import { Order, OrderStatus } from './entities/order.entity';
 export class OrdersService {
   constructor(
     @InjectRepository(Order)
-    private orderRepository: Repository<Order>
+    private orderRepository: Repository<Order>,
+    @InjectRepository(Client)
+    private clientRepository: Repository<Client>
   ) { }
 
   async create(createOrderDto: CreateOrderDto) {
-    const order = this.orderRepository.create(createOrderDto);
-    return await this.orderRepository.save(order);
+    const client = await this.clientRepository.findOne({
+      where: { id: createOrderDto.clientId }
+    });
+
+    if (!client) {
+      throw new NotFoundException('Cliente não encontrado');
+    }
+
+    const order = this.orderRepository.create({ client, status: createOrderDto.status || OrderStatus.RECEIVED });
+    const savedOrder = await this.orderRepository.save(order);
+
+    return await this.orderRepository.findOne({
+      where: { id: savedOrder.id },
+      relations: ['client']
+    });
   }
 
   async findAll(filters: { status?: string; clientId?: string }) {

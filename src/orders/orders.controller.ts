@@ -21,6 +21,7 @@ import { UserRole } from '../users/entities/user.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { StatusOrderDto } from './dto/status-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { OrderStatus } from './entities/order.entity';
 import { OrdersService } from './orders.service';
 import { createOrderSchema } from './schemas/create-order.schema';
 
@@ -47,7 +48,7 @@ export class OrdersController {
 
   @Get()
   @ApiOperation({ summary: 'Listar todos pedidos' })
-  @ApiQuery({ name: 'status', required: false })
+  @ApiQuery({ name: 'status', required: false, enum: OrderStatus })
   @ApiQuery({ name: 'clientId', required: false })
   @ApiResponse({
     status: 200,

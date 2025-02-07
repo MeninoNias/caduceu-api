@@ -35,7 +35,7 @@ export class Order {
   @CreateDateColumn({ name: 'order_date' })
   orderDate: Date;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: 'decimal', precision: 10, scale: 2 , default: 0})
   total: number;
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
