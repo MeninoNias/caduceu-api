@@ -25,6 +25,9 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @Column({ default: false })
+  emailConfirm: boolean;
+
   @Column()
   @Exclude()
   password: string;

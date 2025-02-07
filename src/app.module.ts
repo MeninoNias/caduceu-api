@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
-import { DataBaseConfigService } from './config/db.config.service';
-import { UsersModule } from './users/users.module';
 import { ClientsModule } from './clients/clients.module';
+import { DataBaseConfigService } from './config/db.config.service';
+import { MailSenderModule } from './mail-sender/mail-sender.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ClientsModule } from './clients/clients.module';
     AuthModule,
     UsersModule,
     ClientsModule,
+    MailSenderModule,
   ],
   controllers: [],
   providers: [
