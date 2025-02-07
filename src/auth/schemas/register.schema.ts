@@ -1,17 +1,11 @@
 import * as yup from 'yup';
 
-const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-
 export const registerSchema = yup.object().shape({
   email: yup.string()
     .email('Email inválido')
     .required('Email é obrigatório'),
 
   password: yup.string()
-    .matches(
-      PASSWORD_REGEX,
-      'Senha deve conter pelo menos: 1 letra minúscula, 1 maiúscula, 1 número e 1 caractere especial'
-    )
     .min(6, 'Senha deve ter no mínimo 6 caracteres')
     .required('Senha é obrigatória'),
 

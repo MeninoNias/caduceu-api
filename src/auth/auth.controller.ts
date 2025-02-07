@@ -3,8 +3,7 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Post,
-  UseInterceptors,
-  UsePipes
+  UseInterceptors
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ResponseClientDto } from 'src/clients/dto/response-client.dto';
@@ -25,7 +24,6 @@ export class AuthController {
 
   @Post('login')
   @Public()
-  @UsePipes(new YupValidationPipe(loginSchema))
   @ApiOperation({ summary: 'Login de usuário' })
   @ApiBody({ type: LoginDto })
   @ApiResponse({
@@ -33,13 +31,12 @@ export class AuthController {
     description: 'Token JWT',
     schema: { example: { access_token: 'jwt_token' } }
   })
-  async login(@Body() loginDto: LoginDto) {
+  async login(@Body(new YupValidationPipe(loginSchema)) loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
 
   @Post('register')
   @Public()
-  @UsePipes(new YupValidationPipe(registerSchema))
   @ApiOperation({ summary: 'Registrar novo cliente' })
   @ApiBody({ type: RegisterDto })
   @ApiResponse({
@@ -48,7 +45,7 @@ export class AuthController {
     type: ResponseClientDto
   })
   async register(
-    @Body() registerDto: RegisterDto,
+    @Body(new YupValidationPipe(registerSchema)) registerDto: RegisterDto,
     @Body('password', HashedPasswordPipe) password: string
   ) {
     return this.authService.register({ ...registerDto, password });
