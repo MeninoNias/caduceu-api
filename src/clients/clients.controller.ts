@@ -17,11 +17,11 @@ import {
   ApiResponse,
   ApiTags
 } from '@nestjs/swagger';
-import { Public } from '../auth/decorators/is-public.decorator';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { HashedPasswordPipe } from '../shared/pipes/hashed-password.pipe';
 import { YupValidationPipe } from '../shared/pipes/yup-validation.pipe';
-import { UserRole } from '../users/entities/user.entity';
+import { User, UserRole } from '../users/entities/user.entity';
 import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { FindClientsDto } from './dto/find-client.dto';
@@ -30,14 +30,38 @@ import { UpdateClientDto } from './dto/update-client.dto';
 import { createClientSchema } from './schemas/create-client.schema';
 
 @ApiTags('🙆‍♂️ Clients')
+@Roles()
 @ApiBearerAuth()
-@Roles(UserRole.ADMIN)
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('clients')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) { }
 
+  @Roles(UserRole.ADMIN, UserRole.CLIENT)
+  @Get('me')
+  @ApiOperation({ summary: 'Buscar Meus Dados' })
+  @ApiResponse({
+    status: 200,
+    type: ResponseClientDto
+  })
+  me(@CurrentUser() user: User) {
+    return this.clientsService.findOneByUser(user.id);
+  }
+
+  @Roles(UserRole.ADMIN, UserRole.CLIENT)
+  @Patch('me')
+  @ApiOperation({ summary: 'Atualizar cliente' })
+  @ApiResponse({
+    status: 200,
+    type: ResponseClientDto
+  })
+  async updateMe(@CurrentUser() user: User, @Body() updateClientDto: UpdateClientDto) {
+    const clint = await this.clientsService.findOneByUser(user.id);
+    return this.clientsService.update(clint.id, updateClientDto);
+  }
+
   @Post()
+  @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Cria os clientes' })
   @ApiResponse({
     status: 201,
@@ -51,7 +75,7 @@ export class ClientsController {
   }
 
   @Get()
-  @Public()
+  @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Listar todos clientes' })
   @ApiResponse({
     status: 200,
@@ -72,6 +96,7 @@ export class ClientsController {
   }
 
   @Get(':id')
+  @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Buscar cliente por ID' })
   @ApiResponse({
     status: 200,
@@ -82,6 +107,7 @@ export class ClientsController {
   }
 
   @Patch(':id')
+  @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Atualizar cliente' })
   @ApiResponse({
     status: 200,
@@ -92,6 +118,7 @@ export class ClientsController {
   }
 
   @Delete(':id')
+  @Roles(UserRole.ADMIN)
   @ApiOperation({ summary: 'Excluir cliente' })
   @ApiResponse({
     status: 204,
@@ -100,5 +127,8 @@ export class ClientsController {
   remove(@Param('id') id: string) {
     return this.clientsService.remove(id);
   }
+
+
+
 
 }

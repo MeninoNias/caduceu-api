@@ -29,6 +29,8 @@ export class RolesGuard implements CanActivate {
 
     if (!requiredRoles) return true;
 
+    console.log('requiredRoles', requiredRoles);
+
     const { user } = context.switchToHttp().getRequest();
 
     if (!user?.role) throw new ForbiddenException('Acesso negado: perfil não identificado');
