@@ -11,5 +11,5 @@ export const createOrderSchema = yup.object().shape({
       Object.values(OrderStatus),
       'Status inválido'
     )
-    .default(OrderStatus.RECEIVED),
+    .default(OrderStatus.PROCESSING),
 });

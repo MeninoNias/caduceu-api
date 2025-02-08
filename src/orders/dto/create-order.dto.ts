@@ -10,9 +10,9 @@ export class CreateOrderDto {
 
   @ApiPropertyOptional({
     enum: OrderStatus,
-    default: OrderStatus.RECEIVED,
+    default: OrderStatus.PROCESSING,
     description: 'Status do pedido',
-    example: OrderStatus.RECEIVED
+    example: OrderStatus.PROCESSING
   })
   status?: OrderStatus;
 }

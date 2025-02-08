@@ -11,7 +11,6 @@ import { Client } from '../../clients/entities/client.entity';
 import { OrderItem } from './order-item.entity';
 
 export enum OrderStatus {
-  RECEIVED = 'RECEIVED',          // Pedido recebido
   PROCESSING = 'PROCESSING',      // Em preparação
   READY = 'READY',                // Pronto para despacho
   DISPATCHED = 'DISPATCHED',      // Despachado
@@ -30,7 +29,7 @@ export class Order {
   @Column({
     type: 'enum',
     enum: OrderStatus,
-    default: OrderStatus.RECEIVED,
+    default: OrderStatus.PROCESSING,
   })
   status: OrderStatus;
 
