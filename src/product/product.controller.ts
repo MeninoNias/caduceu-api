@@ -19,11 +19,11 @@ import { UserRole } from '../users/entities/user.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { FindProductsDto } from './dto/find-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { StockProductDto } from './entities/stock-product.dto';
 import { ProductService } from './product.service';
 import { createProductSchema } from './schemas/create-product.schema';
 import { stockProductSchema } from './schemas/stock-product.schema';
 import { updateProductSchema } from './schemas/update-product.schema';
-import { StockProductDto } from './entities/stock-product.dto';
 
 @ApiTags('📦 Product')
 @ApiBearerAuth()
@@ -74,6 +74,7 @@ export class ProductController {
     type: Boolean,
     description: 'Filtrar apenas produtos em estoque'
   })
+  @Roles(UserRole.CLIENT, UserRole.ADMIN)
   findAll(@Query() filters: FindProductsDto) {
     return this.productService.findAll(filters);
   }
