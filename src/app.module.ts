@@ -10,6 +10,7 @@ import { DataBaseConfigService } from './config/db.config.service';
 import { MailSenderModule } from './mail-sender/mail-sender.module';
 import { UsersModule } from './users/users.module';
 import { ProductModule } from './product/product.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ProductModule } from './product/product.module';
     ClientsModule,
     MailSenderModule,
     ProductModule,
+    OrdersModule,
   ],
   controllers: [],
   providers: [

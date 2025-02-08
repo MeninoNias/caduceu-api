@@ -17,11 +17,11 @@ import {
   ApiResponse,
   ApiTags
 } from '@nestjs/swagger';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { HashedPasswordPipe } from 'src/shared/pipes/hashed-password.pipe';
-import { YupValidationPipe } from 'src/shared/pipes/yup-validation.pipe';
-import { UserRole } from 'src/users/entities/user.entity';
 import { Public } from '../auth/decorators/is-public.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { HashedPasswordPipe } from '../shared/pipes/hashed-password.pipe';
+import { YupValidationPipe } from '../shared/pipes/yup-validation.pipe';
+import { UserRole } from '../users/entities/user.entity';
 import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { FindClientsDto } from './dto/find-client.dto';
