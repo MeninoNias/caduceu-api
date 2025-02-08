@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
@@ -35,7 +36,8 @@ export class User {
   @Column({ type: 'enum', enum: UserRole, default: UserRole.CLIENT })
   role: UserRole;
 
-  @OneToOne(() => Client, client => client.user)
+  @OneToOne(() => Client, client => client.user, { eager: true })
+  @JoinColumn()
   client: Client;
 
   @CreateDateColumn()

@@ -21,6 +21,7 @@ async function bootstrap() {
     .addTag('👤 Users', 'Operações com usuários')
     .addTag('🙆‍♂️ Clients', 'Gestão de clientes')
     .addTag('📦 Product', 'Gestão de produtos')
+    .addTag('🛒 Orders', 'Gestão de pedidos')
     .addBearerAuth()
     .build();
 
